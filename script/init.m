@@ -13,6 +13,10 @@ J = 0.45e-3;
 Jt = 2.744e-3;
 mu = Mt*Jt-(m^2)*(l^2);
 
+
+%% Variables de estado
+syms x1 x2 x3 x4 u 
+
 %% Modelo sistema : Matrices (A,B)
 
 
