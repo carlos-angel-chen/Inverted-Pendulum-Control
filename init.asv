@@ -67,12 +67,11 @@ D = double(D);
 Gss = ss(A,B,C,D);
 eig(A)
 
-%%
-% Funcion de transferencia del modelo linealizado
+%% Funcion de transferencia del modelo linealizado
 T = zpk(Gss);
 stepinfo(T);
 
-%%
+%% Controlabilidad y Observabilidad sistema no realimentado
 % Controlabilidad
 Cm = ctrb(A,B);
 RankCm = rank(Cm);
@@ -95,7 +94,7 @@ s2 = -zi*wn - 1i*wn*sqrt(1-zi^2);
 
 cp = [s1 s2 real(s2)*10 real(s2)*10]
 
-%%
+%% Lazo cerrado
 K = acker(A,B,cp);
 
 % Calcula la matriz del sistema a lazo cerrado.
@@ -115,17 +114,16 @@ step(T_cl)
 %% Accion integral 
 
 % Matrices aumentadas
-Aa = [Gss.A zeros(order(Gss),1); -Gss.C zeros(1,1)];
-Ba = [Gss.B; -Gss.D];
-Ca = [C zeros(1,1)];
+Aa = [Gss.A zeros(order(Gss),1); -Gss.C(1,:) zeros(1,1)];
+Ba = [Gss.B; -Gss.D(1,:)];
+Ca = [C zeros(2,1)];
 Da = [D];
-%%
-% Calculo de polos
+
+%% Calculo de polos con accion integral
 cpa = cp;
 cpa(end+1) = cpa(end)*5;
-cpa(end+1) = cpa(end);
-%%
-% Controlabilidad
+
+%% Controlabilidad y Observabilidad con accion integral
 Cm = ctrb(Aa,Ba);
 RankCm = rank(Cm);
 
@@ -133,17 +131,12 @@ RankCm = rank(Cm);
 Om = obsv(Aa,Ca);
 RankOm = rank(Om);
 
-%Polos
-
-%%
-% Ganancias
+%% Ganancias
 Ka = acker(Aa, Ba, cpa);
 K_  = Ka(1:order(Gss)); 
 Ki = -Ka(end);
 
-%%
-
-% Calcula la matriz del sistema a lazo cerrado.
+%% Calcula la matriz del sistema a lazo cerrado.
 Acla = Aa-Ba*Ka;
 eig(Acla)
 
@@ -164,7 +157,3 @@ step(Ta_cl)
 %% Discretizacion 
 
 
-
-%% Realimentación de estados REURISON
-%x = [p,q,v,w]
-K = 1.0e+03 * [-8.4073,3.7519,-2.2419,0.4756];
