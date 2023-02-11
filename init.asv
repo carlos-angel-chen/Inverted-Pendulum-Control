@@ -115,14 +115,15 @@ step(T_cl)
 %% Accion integral 
 
 % Matrices aumentadas
-Aa = [Gss.A zeros(order(Gss),1); -Gss.C(1,:) zeros(1,1)];
-Ba = [Gss.B; -Gss.D(1,:)];
-Ca = [C zeros(2,1)];
+Aa = [Gss.A zeros(order(Gss),1); -Gss.C zeros(1,1)];
+Ba = [Gss.B; -Gss.D];
+Ca = [C zeros(1,1)];
 Da = [D];
 %%
 % Calculo de polos
 cpa = cp;
 cpa(end+1) = cpa(end)*5;
+cpa(end+1) = cpa(end);
 %%
 % Controlabilidad
 Cm = ctrb(Aa,Ba);
@@ -163,3 +164,7 @@ step(Ta_cl)
 %% Discretizacion 
 
 
+
+%% Realimentación de estados REURISON
+%x = [p,q,v,w]
+K = 1.0e+03 * [-8.4073,3.7519,-2.2419,0.4756];
