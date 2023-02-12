@@ -154,5 +154,5 @@ S = stepinfo(Ta_cl);
 step(Ta_cl)
 
 %% Discretizacion 
-Ts = S.RiseTime[1]/20;
+Ts = S(1).RiseTime/20;
 
