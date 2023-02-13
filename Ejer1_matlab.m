@@ -121,7 +121,8 @@ Da = [D];
 
 %% Calculo de polos con accion integral
 cpa = cp;
-cpa(end+1) = cpa(end)*5;
+%cpa(end+1) = cpa(end)*5;
+cpa(end+1) = cpa(end)
 
 %% Controlabilidad y Observabilidad con accion integral
 Cm = ctrb(Aa,Ba);
