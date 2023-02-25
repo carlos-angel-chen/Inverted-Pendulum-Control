@@ -74,58 +74,49 @@ stepinfo(T);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Loop shaping: INTERNO con T2
 s = tf('s');
-T1 = 10   %Arranco considerando un periodo de muestreo chico, parto de una situación mas ideal. 
-Pade = (1-s*T1/4)/(1+s*T1/4);
-Pap_i = Pade*(0.60216*(s+7.76)/(s-7.76))
-Pmp_i = 1/(s+7.76)^2
-C1_i = 1
-L1_i = Pap_i*Pmp_i*C1_i
-figure('Name', 'Bode1'); bode(L1_i)
-Tf1_i = L1/(1+L1_i)
-figure('Name', 'Step1'); step(Tf1_i)
-CS1_i = C1/(1+L1_i)
-figure('Name', 'StepCS1'); step(CS1_i)
+T2 = 1/(40*10*2*pi);   %Arranco considerando un periodo de muestreo chico, parto de una situación mas ideal. 
+Pade = (1-s*T2/4)/(1+s*T2/4);
+C2_1 = 1;
+Pap2 = 0.60216*(s+7.76)/(s-7.76);
+Pmp2 = 1/((s+7.76)^2);
+L2_1 = Pap2*Pmp2*C2_1*Pade
+figure('Name', 'Bode2_1'); bode(L2_1)
+margin(L2_1)
+grid on
 
-%% Agrego un compensador Lead para agregar mas fase a bajas frecuencias
-%Agrego un polo en alta frecuencia para eliminar ruido. Aprox 20 veces ubicacion de frecuencia de cruce (1.86Hz). 
-%Agrego un lag antes de frecuencia de cruce para tener mas pendiente.
-%Modifico la ganancia y voy jugando con el Ts hasta que llego a un sistema que cumpla especificaciones. 
+%% 
+C2_2 = db2mag(34.7)*(1/Pmp2)*(1/s);
+L2_2 = Pap2*Pmp2*Pade*C2_2
+figure('Name', 'Bode2_1'); bode(L2_2)
+margin(L2_2)
+grid on
 
-K2_i = db2mag(53) %Agrego ganancia para MF = 60°
-C2_i = K2_i*((s+7.76)^2*(s+0.8/10))/(s^2 * (s+0.8/100) * (s+1*20)^2);
-L2_i = Pap*Pmp*C2
-figure('Name', 'Bode2'); bode(L2_i)
-Tf2_i = L2/(1+L2_i)
-figure('Name', 'Step2'); step(Tf2_i)
-CS2_i = C2/(1+L2_i)
-figure('Name', 'StepCS2'); step(CS2_i)
+%% 
+C2_3 = db2mag(37.5)*(1/Pmp2)*(1/s)*(1/(s/(30*20)+1)^2)*((s+1)/(s+0.1));
+L2_3 = Pap2*Pmp2*Pade*C2_3
+figure('Name', 'Bode2_1'); bode(L2_3)
+margin(L2_3)
+grid on
 
-%% Loop shaping: EXTERNO con T1
-s = tf('s');
-Pap_e = Pade*(0.10099*(s+7.76)*(s-7.722))/((s-7.76)*(s+7.722))
-Pmp_e = (s+7.722)/(s+7.76)^2
-C1_e = 1
-L1_e = Pap_e*Pmp_e*C1_e
-figure('Name', 'Bode1'); bode(L1_e)
-Tf1_e = L1_e/(1+L1_e)
-figure('Name', 'Step1'); step(Tf1_e)
-CS1_e = C1_e/(1+L1_e)
-figure('Name', 'StepCS1'); step(CS1_e)
+Tf2_3 = L2_3/(1+L2_3)
+figure('Name', 'Step2_3'); step(Tf2_3)
+CS2_3 = C2_3/(1+L2_3)
+figure('Name', 'StepCS2_3'); step(CS2_3)
 
-%% Agrego un compensador Lead para agregar mas fase a bajas frecuencias FALTA TERMINAR DE CORREGIR CONTROLADOR
-%Agrego un polo en alta frecuencia para eliminar ruido. Aprox 20 veces ubicacion de frecuencia de cruce (1.86Hz). 
-%Agrego un lag antes de frecuencia de cruce para tener mas pendiente.
-%Modifico la ganancia y voy jugando con el Ts hasta que llego a un sistema que cumpla especificaciones. 
+%%
+nyqlog(L2_3)
 
-K2_e = db2mag(0.722) %Agrego ganancia para MF = 60°
-C2_e = K2_e*((s+7.76))/(s);
-L2_e = Pap_e*Pmp_e*C2_e
-figure('Name', 'Bode2'); bode(L2_e)
-Tf2_e = L2_e/(1+L2_e)
-figure('Name', 'Step2'); step(Tf2_e)
-CS2_e = C2_e/(1+L2_e)
-figure('Name', 'StepCS2'); step(CS2_e)
+%% Loop shaping: COMPLETO
+C1_1 = ;
+L1_1 = Pap2*Pmp2*Pade*C1_1
+figure('Name', 'Bode1_1'); bode(L1_1)
+margin(L1_1)
+grid on
 
+Tf1_1 = L1_1/(1+L1_1)
+figure('Name', 'Step1_1'); step(Tf1_1)
+CS1_1 = C1_1/(1+L1_1)
+figure('Name', 'StepCS1_1'); step(CS1_1)
 
 
 
